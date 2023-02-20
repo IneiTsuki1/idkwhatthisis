@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "testmod:desh_block"
+    }
+  ],
+  "result": {
+    "item": "testmod:desh_ingot",
+    "count": 9
+  }
+}

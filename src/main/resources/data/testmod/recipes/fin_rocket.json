@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IiI",
+    "*#*",
+    "I~I"
+  ],
+  "key": {
+    "I": {
+      "item": "testmod:compressed_steel"
+    },
+    "i": {
+      "item": "minecraft:crafting_table"
+    },
+    "#": {
+      "item": "testmod:wafer_advanced"
+    },
+    "*": {
+      "item": "minecraft:lever"
+    },
+    "~": {
+      "item": "minecraft:redstone_torch"
+    }
+  },
+  "result": {
+    "item": "testmod:fin_rocket",
+    "count": 1
+  }
+}

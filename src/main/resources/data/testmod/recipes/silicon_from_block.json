@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "testmod:silicon_block"
+    }
+  ],
+  "result": {
+    "item": "testmod:raw_silicon",
+    "count": 9
+  }
+}

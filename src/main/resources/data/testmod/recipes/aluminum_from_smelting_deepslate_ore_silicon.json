@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.3,
+  "group": "tin",
+  "ingredient": {
+    "item": "testmod:deepslate_ore_silicon"
+  },
+  "result": "testmod:raw_silicon"
+}

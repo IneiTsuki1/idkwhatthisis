@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    "testmod:tin_ore",
+    "testmod:tin_block",
+    "testmod:deepslate_ore_tin",
+
+    "testmod:aluminum_ore",
+    "testmod:aluminum_block",
+    "testmod:deepslate_ore_aluminum",
+
+    "testmod:lead_block",
+    "testmod:desh_block",
+
+    "testmod:silicon_block",
+    "testmod:silicon_ore",
+    "testmod:deepslate_ore_silicon",
+
+    "testmod:rocket_workbench",
+    "testmod:circuit_fabricator"
+  ]
+}
