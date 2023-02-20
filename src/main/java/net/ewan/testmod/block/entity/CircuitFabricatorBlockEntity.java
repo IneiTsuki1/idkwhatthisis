@@ -195,10 +195,10 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements MenuPro
     }
 
     private static boolean canInsertItemAmountIntoOutputSlot(SimpleContainer inventory, ItemStack itemStack) {
-        return inventory.getItem(2).getItem() == itemStack.getItem() || inventory.getItem(2).isEmpty();
+        return inventory.getItem(4).getItem() == itemStack.getItem() || inventory.getItem(4).isEmpty();
     }
 
     private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {
-        return inventory.getItem(2).getMaxStackSize() > inventory.getItem(2).getCount();
+        return inventory.getItem(4).getMaxStackSize() > inventory.getItem(4).getCount();
     }
 }
