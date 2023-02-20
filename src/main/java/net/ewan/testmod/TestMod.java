@@ -4,6 +4,7 @@ import net.ewan.testmod.block.ModBlocks;
 import net.ewan.testmod.block.entity.ModBlockEntities;
 import net.ewan.testmod.item.ModCreativeModeTab;
 import net.ewan.testmod.item.ModItems;
+import net.ewan.testmod.recipe.ModRecipes;
 import net.ewan.testmod.screen.ModMenuTypes;
 import net.ewan.testmod.screen.CircuitFabricatorScreen;
 import net.ewan.testmod.screen.RocketWorkbenchScreen;
@@ -60,6 +61,8 @@ public class TestMod
 
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         ModMenuTypes.register(modEventBus);
+
+        ModRecipes.register(modEventBus);
 
 
         modEventBus.addListener(this::commonSetup);

@@ -1,6 +1,7 @@
 package net.ewan.testmod.block.entity;
 
 import net.ewan.testmod.item.ModItems;
+import net.ewan.testmod.recipe.CircuitFabricatorRecipe;
 import net.ewan.testmod.screen.CircuitFabricatorMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,6 +26,9 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.text.html.Option;
+import java.util.Optional;
 
 public class CircuitFabricatorBlockEntity extends BlockEntity implements MenuProvider {
     public static int x;
@@ -156,30 +160,38 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements MenuPro
     }
 
     private static void craftItem(CircuitFabricatorBlockEntity entity) {
+        Level level = entity.level;
+        SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
+        for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
+            inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
+        }
+
+        Optional<CircuitFabricatorRecipe> recipe = level.getRecipeManager()
+                .getRecipeFor(CircuitFabricatorRecipe.Type.INSTANCE, inventory, level);
+
         if (hasRecipe(entity)) {
             entity.itemHandler.extractItem(0,1,false);
             entity.itemHandler.extractItem(1,1,false);
             entity.itemHandler.extractItem(2,1,false);
             entity.itemHandler.extractItem(3,1,false);
 
-            entity.itemHandler.setStackInSlot(4,new ItemStack(ModItems.WAFER_ADVANCED.get(),
+            entity.itemHandler.setStackInSlot(4,new ItemStack(recipe.get().getResultItem().getItem(),
                     entity.itemHandler.getStackInSlot(4).getCount() + 1));
         }
     }
 
     private static boolean hasRecipe(CircuitFabricatorBlockEntity entity) {
+        Level level = entity.level;
         SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
         for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
             inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
         }
 
-        boolean hasDiamondInFirstSlot = entity.itemHandler.getStackInSlot(0).getItem() == Items.DIAMOND;
-        boolean hasRawSiliconInSecondSlot = entity.itemHandler.getStackInSlot(1).getItem() == ModItems.RAW_SILICON.get();
-        boolean hasRawSiliconInThirdSlot = entity.itemHandler.getStackInSlot(2).getItem() == ModItems.RAW_SILICON.get();
-        boolean hasRedstoneInFourthSlot = entity.itemHandler.getStackInSlot(3).getItem() == Items.REDSTONE;
-        
-        return hasDiamondInFirstSlot && hasRawSiliconInSecondSlot && hasRawSiliconInThirdSlot && hasRedstoneInFourthSlot && canInsertAmountIntoOutputSlot(inventory) &&
-                canInsertItemAmountIntoOutputSlot(inventory, new ItemStack(ModItems.WAFER_ADVANCED.get(), 1));
+        Optional<CircuitFabricatorRecipe> recipe = level.getRecipeManager()
+                .getRecipeFor(CircuitFabricatorRecipe.Type.INSTANCE,inventory,level);
+
+        return recipe.isPresent() && canInsertAmountIntoOutputSlot(inventory) &&
+                canInsertItemAmountIntoOutputSlot(inventory, recipe.get().getResultItem());
     }
 
     private static boolean canInsertItemAmountIntoOutputSlot(SimpleContainer inventory, ItemStack itemStack) {

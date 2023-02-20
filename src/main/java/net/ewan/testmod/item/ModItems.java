@@ -33,6 +33,9 @@ public class ModItems {
     public static final RegistryObject<Item> WAFER_ADVANCED = ITEMS.register("wafer_advanced",
             () -> new Item(new Item.Properties().tab(ModCreativeModeTab.TESTMOD_TAB)));
 
+    public static final RegistryObject<Item> WAFER_BASIC = ITEMS.register("wafer_basic",
+            () -> new Item(new Item.Properties().tab(ModCreativeModeTab.TESTMOD_TAB)));
+
     public static final RegistryObject<Item> NOSE_CONE = ITEMS.register("nose_cone",
             () -> new Item(new Item.Properties().tab(ModCreativeModeTab.TESTMOD_TAB)));
 
