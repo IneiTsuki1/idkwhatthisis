@@ -34,7 +34,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements MenuPro
     public static int x;
     public static int y;
     public static int z;
-    private final ItemStackHandler itemHandler = new ItemStackHandler(5) {
+    private final ItemStackHandler itemHandler = new ItemStackHandler(6) {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
@@ -66,7 +66,6 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements MenuPro
                     case 0 -> CircuitFabricatorBlockEntity.this.progress = value;
                     case 1 -> CircuitFabricatorBlockEntity.this.maxProgress = value;
                 }
-
             }
 
             @Override
@@ -89,9 +88,8 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements MenuPro
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return  lazyItemHandler.cast();
+        if(cap == ForgeCapabilities.ITEM_HANDLER) {
+            return lazyItemHandler.cast();
         }
 
         return super.getCapability(cap, side);
@@ -112,9 +110,8 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements MenuPro
 
     @Override
     protected void saveAdditional(CompoundTag nbt) {
-
         nbt.put("inventory", itemHandler.serializeNBT());
-
+        nbt.putInt("fabricator.progress", this.progress);
         super.saveAdditional(nbt);
     }
 
@@ -122,6 +119,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements MenuPro
     public void load(CompoundTag nbt) {
         super.load(nbt);
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
+        progress = nbt.getInt("fabricator.progress");
     }
 
     public void drops() {
@@ -133,33 +131,59 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements MenuPro
         Containers.dropContents(this.level, this.worldPosition, inventory);
     }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, CircuitFabricatorBlockEntity entity) {
+
+    public static void tick(Level level, BlockPos pos, BlockState state, CircuitFabricatorBlockEntity pEntity) {
+
+        //System.out.println("Is Ticking:" + "with - " + pEntity.progress);
 
         if(level.isClientSide()) {
             return;
         }
 
-        if (hasRecipe(entity)) {
-            entity.progress++;
+        if(hasRecipe(pEntity)) {
+            pEntity.progress++;
             setChanged(level, pos, state);
 
-            if (entity.progress >= entity.maxProgress) {
-                craftItem(entity);
-            } else {
-                entity.resetProgress();
-                setChanged(level,pos,state);
+            if(pEntity.progress >= pEntity.maxProgress) {
+                craftItem(pEntity);
             }
+        } else {
+            pEntity.resetProgress();
+            setChanged(level, pos, state);
         }
-
-
-
     }
 
     private void resetProgress() {
+        //System.out.println("RESET PROGRESS");
         this.progress = 0;
     }
 
-    private static void craftItem(CircuitFabricatorBlockEntity entity) {
+    private static void craftItem(CircuitFabricatorBlockEntity pEntity) {
+        //System.out.println("CRAFT ITEM");
+        Level level = pEntity.level;
+        SimpleContainer inventory = new SimpleContainer(pEntity.itemHandler.getSlots());
+        for (int i = 0; i < pEntity.itemHandler.getSlots(); i++) {
+            inventory.setItem(i, pEntity.itemHandler.getStackInSlot(i));
+        }
+
+        Optional<CircuitFabricatorRecipe> recipe = level.getRecipeManager()
+                .getRecipeFor(CircuitFabricatorRecipe.Type.INSTANCE, inventory, level);
+
+        if (hasRecipe(pEntity)) {
+            pEntity.itemHandler.extractItem(0,1,false);
+            pEntity.itemHandler.extractItem(1,1,false);
+            pEntity.itemHandler.extractItem(2,1,false);
+            pEntity.itemHandler.extractItem(3,1,false);
+
+            pEntity.itemHandler.setStackInSlot(4, new ItemStack(recipe.get().getResultItem().getItem(),
+                    pEntity.itemHandler.getStackInSlot(4).getCount() + 1));
+
+            pEntity.resetProgress();
+        }
+    }
+
+    private static boolean hasRecipe(CircuitFabricatorBlockEntity entity) {
+        //System.out.println("HAS RECIPE");
         Level level = entity.level;
         SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
         for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
@@ -168,27 +192,6 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements MenuPro
 
         Optional<CircuitFabricatorRecipe> recipe = level.getRecipeManager()
                 .getRecipeFor(CircuitFabricatorRecipe.Type.INSTANCE, inventory, level);
-
-        if (hasRecipe(entity)) {
-            entity.itemHandler.extractItem(0,1,false);
-            entity.itemHandler.extractItem(1,1,false);
-            entity.itemHandler.extractItem(2,1,false);
-            entity.itemHandler.extractItem(3,1,false);
-
-            entity.itemHandler.setStackInSlot(4,new ItemStack(recipe.get().getResultItem().getItem(),
-                    entity.itemHandler.getStackInSlot(4).getCount() + 1));
-        }
-    }
-
-    private static boolean hasRecipe(CircuitFabricatorBlockEntity entity) {
-        Level level = entity.level;
-        SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
-        for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
-            inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
-        }
-
-        Optional<CircuitFabricatorRecipe> recipe = level.getRecipeManager()
-                .getRecipeFor(CircuitFabricatorRecipe.Type.INSTANCE,inventory,level);
 
         return recipe.isPresent() && canInsertAmountIntoOutputSlot(inventory) &&
                 canInsertItemAmountIntoOutputSlot(inventory, recipe.get().getResultItem());

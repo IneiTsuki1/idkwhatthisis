@@ -8,10 +8,11 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import org.jetbrains.annotations.NotNull;
 
 public class CircuitFabricatorScreen extends AbstractContainerScreen<CircuitFabricatorMenu> {
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation(TestMod.MOD_ID, "textures/gui/circuit_fabricator.png");
+            new ResourceLocation(TestMod.MOD_ID, "textures/gui/circuit_fabricator2.png");
 
 
     public CircuitFabricatorScreen(CircuitFabricatorMenu menu, Inventory inventory, Component component) {
@@ -21,34 +22,39 @@ public class CircuitFabricatorScreen extends AbstractContainerScreen<CircuitFabr
     @Override
     protected void init() {
         super.init();
-        imageHeight = 195;
-        imageWidth = 176;
+        this.imageWidth = 176;
+        this.imageHeight = 195;
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float p_97788_, int p_97789_, int p_97790_) {
+    protected void renderBg(@NotNull PoseStack ms, float partialTicks, int gx, int gy) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
         RenderSystem.setShaderTexture(0, TEXTURE);
-
-        int x = (width - imageWidth) / 2;
-        int y = (height - imageHeight) / 2;
-
-        this.blit(poseStack, x, y, 0, 0, imageWidth, imageHeight);
-        renderProgressArrow(poseStack, x, y);
+        //int x = (width - imageWidth) / 2;
+        //int y = (height - imageHeight) / 2;
+        blit(ms, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, this.imageWidth, this.imageHeight);
+        RenderSystem.setShaderTexture(0, new ResourceLocation(TestMod.MOD_ID, "textures/gui/arrowback.png"));
+        blit(ms, this.leftPos + 12, this.topPos + 92, 0, 0, 40, 10, 40, 10);
+        RenderSystem.setShaderTexture(0, new ResourceLocation(TestMod.MOD_ID, "textures/gui/arrow.png"));
+        blit(ms, this.leftPos + 12, this.topPos + 92, 0, 0, menu.getScaledProgress(), 10, 40, 10);
+        RenderSystem.disableBlend();
+        //renderProgressArrow(poseStack, x, y);
     }
 
-    private void renderProgressArrow(PoseStack poseStack, int x, int y) {
+    /*private void renderProgressArrow(PoseStack poseStack, int x, int y) {
         if (menu.isCrafting()) {
             blit(poseStack, x + 12, y + 92, /* this is the location the arrow will be rendered */
-                    177, 0, 5, /* size of the arrow */menu.getScaledProgress());
-        }
-    }
+                   // 77177, 0, 5, /* size of the arrow *77/menu.getScaledProgress());
+        //}
+    //}*/
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
-        renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, delta);
-        renderTooltip(poseStack, mouseX, mouseY);
+    public void render(@NotNull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(ms);
+        super.render(ms, mouseX, mouseY, partialTicks);
+        this.renderTooltip(ms, mouseX, mouseY);
     }
 }

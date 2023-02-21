@@ -59,10 +59,12 @@ public class TestMod
         ModConfiguresFeatures.register(modEventBus);
         ModPlacedFeatures.register(modEventBus);
 
-        ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
         ModMenuTypes.register(modEventBus);
 
-        ModRecipes.register(modEventBus);
+        //ModRecipes.register(modEventBus);
+        ModRecipes.RECIPE_SERIALIZERS.register(modEventBus);
+        ModRecipes.RECIPE_TYPES.register(modEventBus);
 
 
         modEventBus.addListener(this::commonSetup);

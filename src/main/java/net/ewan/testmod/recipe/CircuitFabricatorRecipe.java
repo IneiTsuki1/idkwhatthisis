@@ -14,14 +14,14 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 
+@SuppressWarnings("ALL")
 public class CircuitFabricatorRecipe implements Recipe<SimpleContainer> {
-
     private final ResourceLocation id;
     private final ItemStack output;
     private final NonNullList<Ingredient> recipeItems;
 
     public CircuitFabricatorRecipe(ResourceLocation id, ItemStack output,
-                                   NonNullList<Ingredient> recipeItems) {
+                          NonNullList<Ingredient> recipeItems) {
         this.id = id;
         this.output = output;
         this.recipeItems = recipeItems;
@@ -33,7 +33,17 @@ public class CircuitFabricatorRecipe implements Recipe<SimpleContainer> {
             return false;
         }
 
-        return recipeItems.get(0).test(pContainer.getItem(4));
+        return recipeItems.get(0).test(pContainer.getItem(0)) && recipeItems.get(1).test(pContainer.getItem(1))  && recipeItems.get(2).test(pContainer.getItem(2))  && recipeItems.get(3).test(pContainer.getItem(3));
+    }
+
+    @Override
+    public String getGroup() {
+        return "";
+    }
+
+    @Override
+    public NonNullList<Ingredient> getIngredients() {
+        return recipeItems;
     }
 
     @Override
@@ -69,8 +79,9 @@ public class CircuitFabricatorRecipe implements Recipe<SimpleContainer> {
     public static class Type implements RecipeType<CircuitFabricatorRecipe> {
         private Type() { }
         public static final Type INSTANCE = new Type();
-        public static  final String ID = "circuit_fabricator";
+        public static final String ID = "circuit_fabricator";
     }
+
 
     public static class Serializer implements RecipeSerializer<CircuitFabricatorRecipe> {
         public static final Serializer INSTANCE = new Serializer();
@@ -92,25 +103,25 @@ public class CircuitFabricatorRecipe implements Recipe<SimpleContainer> {
         }
 
         @Override
-        public @Nullable CircuitFabricatorRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
-            NonNullList<Ingredient> inputs = NonNullList.withSize(pBuffer.readInt(), Ingredient.EMPTY);
+        public @Nullable CircuitFabricatorRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
+            NonNullList<Ingredient> inputs = NonNullList.withSize(buf.readInt(), Ingredient.EMPTY);
 
             for (int i = 0; i < inputs.size(); i++) {
-                inputs.set(i, Ingredient.fromNetwork(pBuffer));
+                inputs.set(i, Ingredient.fromNetwork(buf));
             }
 
-            ItemStack output = pBuffer.readItem();
-            return new CircuitFabricatorRecipe(pRecipeId, output, inputs);
+            ItemStack output = buf.readItem();
+            return new CircuitFabricatorRecipe(id, output, inputs);
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf pBuffer, CircuitFabricatorRecipe pRecipe) {
-            pBuffer.writeInt(pRecipe.getIngredients().size());
+        public void toNetwork(FriendlyByteBuf buf, CircuitFabricatorRecipe recipe) {
+            buf.writeInt(recipe.getIngredients().size());
 
-            for (Ingredient ing : pRecipe.getIngredients()) {
-                ing.toNetwork(pBuffer);
+            for (Ingredient ing : recipe.getIngredients()) {
+                ing.toNetwork(buf);
             }
-            pBuffer.writeItemStack(pRecipe.getResultItem(), false);
+            buf.writeItemStack(recipe.getResultItem(), false);
         }
     }
 }
