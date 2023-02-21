@@ -174,9 +174,10 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements MenuPro
             pEntity.itemHandler.extractItem(1,1,false);
             pEntity.itemHandler.extractItem(2,1,false);
             pEntity.itemHandler.extractItem(3,1,false);
+            pEntity.itemHandler.extractItem(4,1,false);
 
-            pEntity.itemHandler.setStackInSlot(4, new ItemStack(recipe.get().getResultItem().getItem(),
-                    pEntity.itemHandler.getStackInSlot(4).getCount() + 1));
+            pEntity.itemHandler.setStackInSlot(5, new ItemStack(recipe.get().getResultItem().getItem(),
+                    pEntity.itemHandler.getStackInSlot(5).getCount() + 1));
 
             pEntity.resetProgress();
         }
@@ -198,10 +199,10 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements MenuPro
     }
 
     private static boolean canInsertItemAmountIntoOutputSlot(SimpleContainer inventory, ItemStack itemStack) {
-        return inventory.getItem(4).getItem() == itemStack.getItem() || inventory.getItem(4).isEmpty();
+        return inventory.getItem(5).getItem() == itemStack.getItem() || inventory.getItem(5).isEmpty();
     }
 
     private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {
-        return inventory.getItem(4).getMaxStackSize() > inventory.getItem(4).getCount();
+        return inventory.getItem(5).getMaxStackSize() > inventory.getItem(5).getCount();
     }
 }

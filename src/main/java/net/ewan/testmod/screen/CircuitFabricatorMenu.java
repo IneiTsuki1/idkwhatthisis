@@ -64,15 +64,15 @@ public class CircuitFabricatorMenu extends AbstractContainerMenu {
                     return (stack.is(Items.REDSTONE));
                 }
             });
-            this.addSlot(new SlotItemHandler(handler, 5, 139, 8 + 14){
+            this.addSlot(new SlotItemHandler(handler, 4, 139, 8 + 14){
                 @Override
                 public boolean mayPlace(ItemStack stack) {
-                    return (stack.is(Items.REDSTONE));
+                    return (stack.is(Items.COMPARATOR));
                 }
             });
 
 
-            this.addSlot(new SlotItemHandler(handler, 4, 143, 69 + 14){
+            this.addSlot(new SlotItemHandler(handler, 5, 143, 69 + 14){
                 @Override
                 public boolean mayPlace(ItemStack stack) {
                     return false;
@@ -128,7 +128,7 @@ public class CircuitFabricatorMenu extends AbstractContainerMenu {
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 
     // THIS YOU HAVE TO DEFINE!
-    private static final int TE_INVENTORY_SLOT_COUNT = 7;  // must be the number of slots you have!
+    private static final int TE_INVENTORY_SLOT_COUNT = 6;  // must be the number of slots you have!
 
     @Override
     public ItemStack quickMoveStack(Player playerIn, int index) {
