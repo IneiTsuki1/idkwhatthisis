@@ -1,6 +1,5 @@
 package net.ewan.testmod.block.entity;
 
-import net.ewan.testmod.item.ModItems;
 import net.ewan.testmod.recipe.CircuitFabricatorRecipe;
 import net.ewan.testmod.screen.CircuitFabricatorMenu;
 import net.minecraft.core.BlockPos;
@@ -15,7 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,7 +25,6 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 public class CircuitFabricatorBlockEntity extends BlockEntity implements MenuProvider {
@@ -69,16 +66,12 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements MenuPro
             }
 
             @Override
-            public int getCount() {
-                return 2;
-            }
+            public int getCount() { return 2; }
         };
     }
 
     @Override
-    public Component getDisplayName() {
-        return Component.literal("");
-    }
+    public @NotNull Component getDisplayName() { return Component.literal("Circuit Fabricator"); }
 
     @Nullable
     @Override
@@ -116,7 +109,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements MenuPro
     }
 
     @Override
-    public void load(CompoundTag nbt) {
+    public void load(@NotNull CompoundTag nbt) {
         super.load(nbt);
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
         progress = nbt.getInt("fabricator.progress");
@@ -128,7 +121,8 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements MenuPro
             inventory.setItem(i, itemHandler.getStackInSlot(i));
         }
 
-        Containers.dropContents(this.level, this.worldPosition, inventory);
+		assert this.level != null;
+		Containers.dropContents(this.level, this.worldPosition, inventory);
     }
 
 

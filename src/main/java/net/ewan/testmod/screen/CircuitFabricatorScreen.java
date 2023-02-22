@@ -15,9 +15,7 @@ public class CircuitFabricatorScreen extends AbstractContainerScreen<CircuitFabr
             new ResourceLocation(TestMod.MOD_ID, "textures/gui/circuit_fabricator2.png");
 
 
-    public CircuitFabricatorScreen(CircuitFabricatorMenu menu, Inventory inventory, Component component) {
-        super(menu, inventory, component);
-    }
+    public CircuitFabricatorScreen(CircuitFabricatorMenu menu, Inventory inventory, Component component) { super(menu, inventory, component); }
 
     @Override
     protected void init() {
