@@ -4,8 +4,6 @@ import net.ewan.testmod.block.ModBlocks;
 import net.ewan.testmod.block.entity.CircuitFabricatorBlockEntity;
 import net.ewan.testmod.item.ModItems;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
@@ -15,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.SlotItemHandler;
+import org.jetbrains.annotations.NotNull;
 
 
 public class CircuitFabricatorMenu extends AbstractContainerMenu {
@@ -42,41 +41,29 @@ public class CircuitFabricatorMenu extends AbstractContainerMenu {
         this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler ->  {
             this.addSlot(new SlotItemHandler(handler, 0, 20, 6 + 14){
                 @Override
-                public boolean mayPlace(ItemStack stack) {
-                    return (stack.is(Items.DIAMOND));
-                }
+                public boolean mayPlace(@NotNull ItemStack stack) { return (stack.is(Items.DIAMOND)); }
             });
              this.addSlot(new SlotItemHandler(handler, 1, 56, 28 + 14){
                  @Override
-                 public boolean mayPlace(ItemStack stack) {
-                     return (stack.is(ModItems.RAW_SILICON.get()));
-                 }
+                 public boolean mayPlace(@NotNull ItemStack stack) { return (stack.is(ModItems.RAW_SILICON.get())); }
              });
             this.addSlot(new SlotItemHandler(handler, 2, 56, 52 + 14){
                 @Override
-                public boolean mayPlace(ItemStack stack) {
-                    return (stack.is(ModItems.RAW_SILICON.get()));
-                }
+                public boolean mayPlace(@NotNull ItemStack stack) { return (stack.is(ModItems.RAW_SILICON.get())); }
             });
             this.addSlot(new SlotItemHandler(handler, 3, 103, 37 + 14){
                 @Override
-                public boolean mayPlace(ItemStack stack) {
-                    return (stack.is(Items.REDSTONE));
-                }
+                public boolean mayPlace(@NotNull ItemStack stack) { return (stack.is(Items.REDSTONE)); }
             });
-            this.addSlot(new SlotItemHandler(handler, 4, 139, 8 + 14){
-                @Override
-                public boolean mayPlace(ItemStack stack) {
-                    return (stack.is(Items.COMPARATOR));
-                }
-            });
+				this.addSlot(new SlotItemHandler(handler, 4, 139, 8 + 14){
+				@Override
+				public boolean mayPlace(@NotNull ItemStack stack) { return (stack.is(Items.COMPARATOR)); }
+			});
 
 
             this.addSlot(new SlotItemHandler(handler, 5, 143, 69 + 14){
                 @Override
-                public boolean mayPlace(ItemStack stack) {
-                    return false;
-                }
+                public boolean mayPlace(@NotNull ItemStack stack) { return false; }
             });
 
             //EXAMPLES FOR SLOT INPUT LIMITS!
@@ -131,7 +118,7 @@ public class CircuitFabricatorMenu extends AbstractContainerMenu {
     private static final int TE_INVENTORY_SLOT_COUNT = 6;  // must be the number of slots you have!
 
     @Override
-    public ItemStack quickMoveStack(Player playerIn, int index) {
+    public @NotNull ItemStack quickMoveStack(@NotNull Player playerIn, int index) {
         Slot sourceSlot = slots.get(index);
         if (sourceSlot == null || !sourceSlot.hasItem()) return ItemStack.EMPTY;  //EMPTY_ITEM
         ItemStack sourceStack = sourceSlot.getItem();
@@ -165,7 +152,7 @@ public class CircuitFabricatorMenu extends AbstractContainerMenu {
 
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean stillValid(@NotNull Player player) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
                 player, ModBlocks.CIRCUIT_FABRICATOR_BLOCK.get());
     }
